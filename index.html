@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>koky</title>
+  <link rel="manifest" href="manifest.json">
+     <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        };
+    </script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PWA Example">
+    <link rel="apple-touch-icon" href="icon-152x152.png">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+/* الوزن Bold */
+@font-face {
+  font-family: 'ItfGhroob';
+  src: url('https://framerusercontent.com/assets/WemXio0DsnMZkNGewKgMXHSJMA.woff2') format('woff2');
+  font-weight: 700;  /* Bold */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* الوزن الجديد (مثلاً Regular أو Medium) */
+@font-face {
+  font-family: 'ItfGhroob';
+  src: url('https://framerusercontent.com/assets/zA8VvNvMm9p6d5VbPbmp8fdsyk.woff2') format('woff2');
+  font-weight: 400;  /* Regular */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* تطبيق الخط على كل الموقع */
+body {
+  font-family: 'ItfGhroob', sans-serif;
+  font-weight: 400; /* افتراضي Paragraph */
+}
+
+/* العناوين يمكن أن تكون Bold */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+</style>
+<style>
+    
+:root{
+--blue:#1da2a3;
+--black:#111;
+--white:#fff;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+
+body{
+background:var(--white);
+color:var(--black);
+overflow-x:hidden;
+}
+
+/* ===== Container Centered ===== */
+.container{
+width:90%;
+max-width:1100px;
+margin:auto;
+}
+
+/* ===== Header ===== */
+header{
+position:fixed;
+top:20px;
+right:50%;
+transform:translateX(50%);
+width:90%;
+max-width:1100px;
+background:rgba(255,255,255,0.95);
+padding:12px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-radius:50px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+transition:0.3s;
+z-index:1000;
+}
+
+header.scrolled{
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+.logo img{
+height:40px;
+}
+
+nav{
+display:flex;
+gap:25px;
+}
+
+nav a{
+text-decoration:none;
+color:var(--black);
+font-weight:500;
+transition:0.3s;
+}
+
+nav a:hover{
+color:var(--blue);
+}
+
+.menu-btn{
+display:none;
+font-size:24px;
+cursor:pointer;
+}
+
+/* ===== Sections ===== */
+section{
+min-height:100vh;
+padding:140px 0 80px;
+display:flex;
+align-items:center;
+opacity:0;
+transform:translateY(40px);
+transition:1s ease;
+}
+
+section.show{
+opacity:1;
+transform:translateY(0);
+}
+
+h1{
+font-size:42px;
+margin-bottom:20px;
+}
+
+h2{
+font-size:30px;
+margin-bottom:30px;
+text-align:center;
+}
+
+h2::after{
+content:"";
+display:block;
+width:60px;
+height:3px;
+background:var(--blue);
+margin:10px auto 0;
+}
+
+/* ===== Hero ===== */
+.hero-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:50px;
+align-items:center;
+}
+
+.hero-text{
+text-align:right;
+}
+
+.hero-image img{
+    width:80%;        /* هذا هو الذي صغّر الصورة */
+    max-width:400px;  /* يمنعها من أن تكبر أكثر من 400px */
+    border-radius:25px;
+    display:block;
+    margin:auto;
+}
+
+.hero img:hover{
+transform:scale(1.05);
+}
+
+/* ===== Grid System ===== */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+text-align:center;
+}
+
+.card{
+padding:30px;
+border-radius:25px;
+border:1px solid #eee;
+transition:0.4s;
+}
+
+.card i{
+font-size:30px;
+color:var(--blue);
+margin-bottom:15px;
+}
+
+.card:hover{
+border-color:var(--blue);
+transform:translateY(-10px);
+}
+/* حاوية البورتفوليو */
+.portfolio-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 أعمدة متساوية */
+  gap: 20px; /* المسافة بين الصور */
+  padding: 10px; /* مسافة داخلية للحاوية */
+}
+
+/* عنصر البورتفوليو */
+.portfolio-item {
+  border-radius: 25px;
+  overflow: hidden;
+  position: relative;
+  height: 180px; /* ارتفاع ثابت لجميع الصور */
+}
+
+/* الصور داخل العنصر */
+.portfolio-item img {
+  width: 100%;
+  height: auto; /* يحافظ على نسبة الصورة */
+  max-height: 100%; /* لا يتجاوز ارتفاع العنصر */
+  object-fit: contain; /* يترك الحواف إذا كانت الصورة أصغر من العنصر */
+  display: block;
+  margin: auto; /* يوسّط الصورة أفقياً وعمودياً */
+  transition: none; /* إلغاء أي تأثير عند الهور */
+}
+
+/* النص على الصورة */
+.portfolio-item span {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: var(--blue);
+  color: var(--white);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* إزالة التكبير عند المرور على الصورة */
+.portfolio-item:hover img {
+  transform: none;
+}
+
+/* لجعل الشبكة متجاوبة على الموبايل */
+@media (max-width: 900px) {
+  .portfolio-container {
+    grid-template-columns: repeat(2, 1fr); /* صفين عند الشاشات المتوسطة */
+  }
+}
+
+@media (max-width: 600px) {
+  .portfolio-container {
+    grid-template-columns: 1fr; /* عمود واحد على الموبايل */
+  }
+}
+/* ===== Portfolio ===== */
+
+
+/* ===== Overview Section ===== */
+.overview{
+text-align:center;
+max-width:700px;
+margin:auto;
+font-size:18px;
+line-height:1.8;
+}
+
+/* ===== Contact ===== */
+.contact-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:50px;
+align-items:center;
+}
+
+form{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+input,textarea{
+padding:12px;
+border-radius:15px;
+border:1px solid #ddd;
+outline:none;
+transition:0.3s;
+}
+
+input:focus,textarea:focus{
+border-color:var(--blue);
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:30px;
+background:var(--blue);
+color:var(--white);
+font-weight:600;
+cursor:pointer;
+}
+
+button:hover{
+background:#084298;
+}
+
+.social{
+margin-top:15px;
+text-align:center;
+}
+
+.social a{
+margin:0 10px;
+font-size:22px;
+color:var(--blue);
+}
+
+/* ===== Responsive ===== */
+@media(max-width:900px){
+
+.hero-grid{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.hero-text{
+order:2;
+text-align:center;
+}
+
+.hero-image{
+order:1;
+}
+
+.contact-grid{
+grid-template-columns:1fr;
+}
+
+nav{
+position:absolute;
+top:80px;
+right:0;
+background:var(--white);
+flex-direction:column;
+width:100%;
+padding:20px;
+border-radius:20px;
+display:none;
+}
+
+nav.active{display:flex;}
+.menu-btn{display:block;}
+}
+</style>
+</head>
+
+<body>
+
+<header id="header">
+<div class="logo">
+<img src="logo.png">
+</div>
+
+<div class="menu-btn" onclick="toggleMenu()">
+<i class="fas fa-bars"></i>
+</div>
+
+<nav id="nav">
+<a href="#about">الرئيسية</a>
+<a href="#experience">الخبرات</a>
+<a href="#portfolio">أعمالي</a>
+<a href="#overview">لمحة</a>
+<a href="#contact">تواصل</a>
+</nav>
+</header>
+
+<!-- Hero -->
+<section id="about" class="hero">
+<div class="container hero-grid">
+
+<div class="hero-text">
+<h1>مرحباً، هنا كوكي</h1>
+<p>او الاصح كاميار مصمم ومترجم ومبرمج وممنتج والقائمة تطول :)
+    عملت في العديد من المجالات في عمر صغير لذا خبرتي المتواضعه ستكون 
+    كافيه لتلبية احتياجاتك في اغلب المجالات استمر بالتعرف عليه
+</p>
+</div>
+
+<div class="hero-image">
+<img src="https://i.imghippo.com/files/CDb1909DP.jpg">
+</div>
+
+</div>
+</section>
+    <style>
+
+.liquid-alert{
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  padding: 18px 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(15px);
+  background: rgba(13,110,253,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  transform: translateY(-40px);
+  opacity: 0;
+  transition: all 0.6s ease;
+  z-index: 9999;
+}
+
+.liquid-alert.show{
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.liquid-alert i{
+  margin-left: 8px;
+  color: #0d6efd;
+}
+
+.card i{
+  font-size:45px;
+  color:#0d6efd;
+  margin-bottom:15px;
+}
+
+.companylogos img{
+  width:100px;          /* حجم مناسب */
+  height:70px;          /* ارتفاع ثابت */
+  object-fit:contain;   /* يحافظ على تناسب الصورة */
+  margin-bottom:15px;
+  transition:0.3s;
+}
+
+/* تأثير حركة */
+.card:hover{
+  transform:translateY(-6px);
+}
+
+.companylogos img:hover{
+  transform:scale(1.1);
+}
+
+.card h3{
+  font-size:18px;
+  font-weight:600;
+}
+    </style>
+<!-- Experience -->
+<section id="experience">
+  <div class="container">
+    <h2>الخبرات والعملاء</h2>
+
+    <div class="grid">
+
+      <!-- الخبرات (أيقونات) -->
+      <div class="card">
+        <i class="fas fa-briefcase"></i>
+        <h3>+5 سنوات خبرة</h3>
+      </div>
+
+      <div class="card">
+        <i class="fas fa-star"></i>
+        <h3>مشاريع مختلفة</h3>
+      </div>
+
+      <!-- الشركات (صور + كتابة) -->
+      <div class="card companylogos">
+        <img src="iq.png" alt="شركة A">
+        <h3>منصة العراق اكاديمي</h3>
+      </div>
+
+      <div class="card companylogos">
+        <img src="esam.png" alt="شركة B">
+        <h3>الاستاذ عصام الشمري</h3>
+      </div>
+      <div class="card companylogos">
+        <img src="j.jpg" alt="شركة B">
+        <h3>الاستاذ جعفر الحستي</h3>
+      </div>
+                        <div class="card companylogos">
+        <img src="o.png" alt="شركة B">
+        <h3>مطعم اوكسجين</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section id="portfolio">
+<div class="container">
+<h2>أعمالي</h2>
+<div class="grid">
+    
+<div class="portfolio-item">
+<img src="img/jafer.png">
+<span>صورة مصغره
+</span>
+</div>
+<div class="portfolio-item">
+<img src="img/jafer1.png">
+<span>صورة مصغرة</span>
+</div>
+<div class="portfolio-item">
+<img src="img/Ahmed.png">
+<span>صورة مصغرة</span>
+</div>
+    <div class="portfolio-item">
+<img src="img/Ahmed2.png">
+<span>صورة مصغره
+</span>
+</div>
+<div class="portfolio-item">
+<img src="img/Nora.jpg">
+<span>صورة مصغرة</span>
+</div>
+<div class="portfolio-item">
+<img src="img/k.jpg">
+</div>
+ <div class="portfolio-item">
+<img src="img/k1.jpg">
+</div>
+    <div class="portfolio-item">
+<img src="img/I1.jpg">
+<span>بوست</span>
+</div>
+        <div class="portfolio-item">
+<img src="img/I2.jpg">
+<span>بوست</span>
+</div>
+        <div class="portfolio-item">
+<img src="img/E.jpg">
+<span>بوست</span>
+</div>
+        <div class="portfolio-item">
+<img src="img/H.jpg">
+<span>بوست</span>
+</div>
+        <div class="portfolio-item">
+<img src="img/koky.png">
+<span>بوست</span>
+</div>
+        <div class="portfolio-item">
+<img src="img/A1.png">
+<span>بوست</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Overview -->
+<section id="overview">
+<div class="container">
+<h2>لمحة</h2>
+<div class="overview">
+دائما اؤمن بجملة يقولها البطل في مسلسلي المفضل الناسُ الّذينَ غيرُ قادرينَ على القِتالِ، غيرُ قادرينَ على النَّجاةِ
+</div>
+</div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+<div class="container">
+<h2>تواصل معي</h2>
+<div class="contact-grid">
+
+<div>
+<div class="social">
+<a href="t.me/kokydwz"><i class="fab fa-telegram"></i></a>
+ <a href="t.me/kokydwz2"><i class="fab fa-telegram"></i></a>
+<a href="https://www.instagram.com/koki8413?igsh=MWF3NHk0azFtdmsxdg=="><i class="fab fa-instagram"></i></a>
+<a href="https://youtube.com/@iqkoky?si=DHPTW9JOts1lCVFt"><i class="fab fa-youtube"></i></a>
+</div>
+</div>
+
+<form id="contactForm" enctype="multipart/form-data">
+  <input type="text" id="name" placeholder="الاسم" required>
+  <input type="tel" id="phone" placeholder="رقم الهاتف" required>
+  <input type="text" id="username" placeholder="يوزر تليجرام" required>
+  <textarea id="message" rows="4" placeholder="رسالتك" required></textarea>
+
+  <!-- صورة اختيارية -->
+  <input type="file" id="image" accept="image/*">
+
+  <button type="submit">
+    <i class="fas fa-paper-plane"></i> إرسال
+  </button>
+</form>
+
+</div>
+</div>
+</section>
+<script>
+const TOKEN = "8780431224:AAE0jt64dVERoWhTleQGeYQKfWf-nZtpC6A";
+const CHAT_ID = "1619677372";
+
+function showSuccess(){
+  const box = document.createElement("div");
+  box.className = "liquid-alert success";
+  box.innerHTML = `<i class="fas fa-check-circle"></i> تم استلام رسالتك بنجاح`;
+  document.body.appendChild(box);
+
+  setTimeout(()=> box.classList.add("show"),100);
+  setTimeout(()=>{
+    box.classList.remove("show");
+    setTimeout(()=> box.remove(),600);
+  },3000);
+}
+
+function showError(){
+  const box = document.createElement("div");
+  box.className = "liquid-alert error";
+  box.innerHTML = `<i class="fas fa-times-circle"></i> حدث خطأ أثناء الإرسال`;
+  document.body.appendChild(box);
+
+  setTimeout(()=> box.classList.add("show"),100);
+  setTimeout(()=>{
+    box.classList.remove("show");
+    setTimeout(()=> box.remove(),600);
+  },3000);
+}
+
+document.getElementById("contactForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const btn = this.querySelector("button");
+    btn.disabled = true;
+    btn.innerHTML = "جاري الإرسال...";
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const username = document.getElementById("username").value;
+    const message = document.getElementById("message").value;
+    const image = document.getElementById("image").files[0];
+
+    let text = `📩 رسالة جديدة
+
+👤 الاسم: ${name}
+📞 الهاتف: ${phone}
+🔗 يوزر تليجرام: @${username}
+📝 الرسالة:
+${message}`;
+
+    try {
+
+        let response;
+
+        if(!image){
+            response = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({
+                    chat_id:CHAT_ID,
+                    text:text
+                })
+            });
+        } else {
+            let formData = new FormData();
+            formData.append("chat_id", CHAT_ID);
+            formData.append("caption", text);
+            formData.append("photo", image);
+
+            response = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`,{
+                method:"POST",
+                body:formData
+            });
+        }
+
+        if(response.ok){
+            showSuccess();
+            this.reset();
+        } else {
+            showError();
+        }
+
+    } catch(error){
+        showError();
+        console.error(error);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fas fa-paper-plane"></i> إرسال`;
+
+});
+
+</script>
+<script>
+    
+function toggleMenu(){
+document.getElementById("nav").classList.toggle("active");
+}
+
+window.addEventListener("scroll",()=>{
+document.getElementById("header").classList.toggle("scrolled",window.scrollY>50);
+
+document.querySelectorAll("section").forEach(sec=>{
+if(sec.getBoundingClientRect().top < window.innerHeight-100){
+sec.classList.add("show");
+}
+});
+});
+</script>
+
+</body>
+</html>
